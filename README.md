@@ -29,6 +29,8 @@ Crisp Input → Fuzzifikasi → Evaluasi Rule → Implikasi → Agregasi → Def
 ├── 📄 fuzzy_membership.py    # Program 1: Eksplorasi & perbandingan fungsi keanggotaan
 ├── 📄 fuzzy_bonus.py         # Program 2: FIS untuk menghitung bonus restoran
 ├── 📄 fuzzy_produksi.py      # Program 3: FIS untuk penentuan jumlah produksi
+├── 📄 fuzzy_penyiraman.py    # Program 4: FIS Sistem Penyiraman Tanaman Otomatis (CLI)
+├── 📄 fuzzy_penyiraman_gui.py# Program 5: GUI Interaktif FIS Penyiraman (Tkinter + Matplotlib)
 ├── 📄 test_library.py        # Pengujian ketersediaan library
 ├── 📁 hasil/                 # Output grafik (PNG) yang dihasilkan program
 └── 📄 README.md
@@ -158,6 +160,50 @@ No | Permintaan | Persediaan | Produksi
  ...
 10 |       3800 |        250 |  5590.36
 ```
+
+---
+
+## 📌 Program 4 & 5 — `fuzzy_penyiraman.py` & `fuzzy_penyiraman_gui.py`
+### Sistem Fuzzy Penyiraman Tanaman Otomatis (CLI & GUI Interaktif)
+
+**Tujuan:** Menentukan durasi penyiraman tanaman (dalam menit) berdasarkan variabel masukan **Suhu Udara** dan **Kelembapan Tanah** menggunakan metode inferensi Mamdani.
+
+**Variabel Masukan & Keluaran:**
+
+| Tipe | Variabel | Semesta | Kategori | Parameter MF (`trimf`) |
+|------|----------|---------|----------|------------------------|
+| **Input** | Suhu Udara | 15 – 40 °C | DINGIN | `[15, 15, 25]` |
+| | | | NORMAL | `[20, 27.5, 35]` |
+| | | | PANAS | `[30, 40, 40]` |
+| **Input** | Kelembapan Tanah | 0 – 100 % | KERING | `[0, 0, 50]` |
+| | | | LEMBAP | `[25, 50, 75]` |
+| | | | BASAH | `[50, 100, 100]` |
+| **Output** | Durasi Penyiraman | 0 – 30 menit | SINGKAT | `[0, 0, 12]` |
+| | | | SEDANG | `[8, 15, 22]` |
+| | | | LAMA | `[18, 30, 30]` |
+
+**Basis Aturan (9 Rules):**
+
+| No | Suhu | Kelembapan | Durasi |
+|----|------|------------|--------|
+| R1 | DINGIN | KERING | SEDANG |
+| R2 | DINGIN | LEMBAP | SINGKAT |
+| R3 | DINGIN | BASAH | SINGKAT |
+| R4 | NORMAL | KERING | LAMA |
+| R5 | NORMAL | LEMBAP | SEDANG |
+| R6 | NORMAL | BASAH | SINGKAT |
+| R7 | PANAS | KERING | LAMA |
+| R8 | PANAS | LEMBAP | LAMA |
+| R9 | PANAS | BASAH | SEDANG |
+
+**Fitur Unggulan Versi GUI (`fuzzy_penyiraman_gui.py`):**
+- 🎛️ **Dua Metode Input Tersinkronisasi**: Slider interaktif (respons *real-time*) + Input Manual via keyboard (*Entry* teks).
+- 🖱️ **Panel Kontrol Scrollable**: Seluruh 9 aturan *firing strength* ($\alpha$) dan tabel data uji dapat di-scroll lancar menggunakan roda mouse atau scrollbar vertikal.
+- 📊 **Visualisasi 4 Tab Terintegrasi**: *Membership Functions*, *Implikasi 9 Aturan*, *Agregasi MAX & Defuzzifikasi Centroid*, serta *Rule Viewer Bar Chart*.
+- 💾 **Simpan Gambar Custom via File Explorer**:
+  - Tombol simpan per tab (bebas pilih folder dan nama file).
+  - Tombol simpan **Semua Bagian (Pisah Tiap File `.png`)** langsung ke folder pilihan pengguna dengan memori posisi folder terakhir.
+- 📋 **Tabel 10 Data Uji Interaktif**: Klik baris tabel untuk langsung mensimulasikan nilai ke grafik.
 
 ---
 
