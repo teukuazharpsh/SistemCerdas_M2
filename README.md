@@ -227,7 +227,7 @@ Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
 
 ## 👤 Informasi
 > **Nama :** Teuku Azhar Pasha <br /> 
-> **NIM :** 202406036
+> **NIM :** 202406036 <br /> 
 > **Mata Kuliah :** MKPT 501 — Sistem Cerdas  
 > **Program :** PEI Semester 5  
 > **Modul :** M2 — Logika Fuzzy (FIS Mamdani)  
