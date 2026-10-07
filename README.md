@@ -226,7 +226,7 @@ Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
 ---
 
 ## 👤 Informasi
-> **Nama :** Teuku Azhar Pasha >
+> **Nama :** Teuku Azhar Pasha \n
 > **NIM :** 202406036
 > **Mata Kuliah :** MKPT 501 — Sistem Cerdas  
 > **Program :** PEI Semester 5  
