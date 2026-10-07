@@ -226,8 +226,10 @@ Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
 ---
 
 ## 👤 Informasi
-
+> **Nama :** Teuku Azhar Pasha
+> **NIM :** 202406036
 > **Mata Kuliah :** MKPT 501 — Sistem Cerdas  
 > **Program :** PEI Semester 5  
 > **Modul :** M2 — Logika Fuzzy (FIS Mamdani)  
-> **Tanggal :** 06 Oktober 2026
+> **Tanggal :** 07 Oktober 2026
+> **Dosen Pengampu :** Dr. Emmanuel Agung Nughroho S.T., M.T.
