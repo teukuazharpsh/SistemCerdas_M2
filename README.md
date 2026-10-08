@@ -5,14 +5,16 @@
 ![scikit-fuzzy](https://img.shields.io/badge/scikit--fuzzy-0.4.2-orange?style=flat)
 ![NumPy](https://img.shields.io/badge/NumPy-1.x-013243?style=flat&logo=numpy)
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-3.x-11557C?style=flat)
+![Tkinter](https://img.shields.io/badge/GUI-Tkinter-informational?style=flat)
 ![License](https://img.shields.io/badge/License-Academic-green?style=flat)
 
 ---
 
 ## 📋 Deskripsi
 
-Repository ini berisi implementasi **Fuzzy Inference System (FIS) Mamdani** menggunakan Python dalam tiga skenario berbeda.  
-Program dikembangkan sebagai bagian dari praktikum mata kuliah **MKPT 501 — Sistem Cerdas**, yang bertujuan untuk memahami konsep dasar logika fuzzy secara teori maupun implementasi kode.
+Repository ini berisi implementasi **Fuzzy Inference System (FIS) Mamdani** menggunakan Python dalam berbagai skenario aplikasi rekayasa kecerdasan buatan, mulai dari perbandingan membership function, estimasi bonus restoran, perencanaan produksi manufaktur, sistem otomasi penyiraman tanaman, hingga sistem kendali kecepatan motor DC.
+
+Program dikembangkan sebagai bagian dari praktikum mata kuliah **MKPT 501 — Sistem Cerdas**, yang bertujuan untuk memahami konsep dasar logika fuzzy secara teori matematis maupun implementasi kode interaktif.
 
 Seluruh program mengikuti alur standar **8 Tahap FIS Mamdani**:
 
@@ -26,14 +28,15 @@ Crisp Input → Fuzzifikasi → Evaluasi Rule → Implikasi → Agregasi → Def
 
 ```
 📦 2. Program/
-├── 📄 fuzzy_membership.py    # Program 1: Eksplorasi & perbandingan fungsi keanggotaan
-├── 📄 fuzzy_bonus.py         # Program 2: FIS untuk menghitung bonus restoran
-├── 📄 fuzzy_produksi.py      # Program 3: FIS untuk penentuan jumlah produksi
-├── 📄 fuzzy_penyiraman.py    # Program 4: FIS Sistem Penyiraman Tanaman Otomatis (CLI)
-├── 📄 fuzzy_penyiraman_gui.py# Program 5: GUI Interaktif FIS Penyiraman (Tkinter + Matplotlib)
-├── 📄 test_library.py        # Pengujian ketersediaan library
-├── 📁 hasil/                 # Output grafik (PNG) yang dihasilkan program
-└── 📄 README.md
+├── 📄 fuzzy_membership.py     # Program 1: Eksplorasi & perbandingan fungsi keanggotaan
+├── 📄 fuzzy_bonus.py          # Program 2: FIS untuk menghitung bonus restoran
+├── 📄 fuzzy_produksi.py       # Program 3: FIS untuk penentuan jumlah produksi
+├── 📄 fuzzy_penyiraman.py     # Program 4: FIS Sistem Penyiraman Tanaman Otomatis (CLI)
+├── 📄 fuzzy_penyiraman_gui.py # Program 5: GUI Interaktif FIS Penyiraman (Tkinter + Matplotlib)
+├── 📄 fuzzy_motor.py          # Program 6: GUI Interaktif FIS Kendali Kecepatan Motor DC
+├── 📄 test_library.py         # Pengujian ketersediaan library Python
+├── 📁 hasil/                  # Output grafik (.PNG) yang diekspor dari program
+└── 📄 README.md               # Dokumentasi lengkap proyek
 ```
 
 ---
@@ -58,7 +61,7 @@ Crisp Input → Fuzzifikasi → Evaluasi Rule → Implikasi → Agregasi → Def
 
 **Output yang dihasilkan:**
 - 📊 Grafik perbandingan 2 variasi fungsi keanggotaan → `hasil/p1_membership.png`
-- 🖨️ Tabel nilai derajat keanggotaan (μ) untuk input uji `x = {3, 4, 6, 7}`
+- 🖨️ Tabel nilai derajat keanggotaan ($\mu$) untuk input uji $x \in \{3, 4, 6, 7\}$
 
 **Cara menjalankan:**
 ```bash
@@ -146,20 +149,6 @@ Nilai makanan   (0-10): 8
 ```bash
 python fuzzy_produksi.py
 ```
-```
-Permintaan (1000-5000): 3800
-Persediaan (100-600)  : 250
-```
-
-**Contoh output tabel 10 data uji:**
-```
-No | Permintaan | Persediaan | Produksi
- 1 |       1000 |        100 |  2833.33
- 2 |       1500 |        500 |  2928.57
- 3 |       2000 |        200 |  2972.22
- ...
-10 |       3800 |        250 |  5590.36
-```
 
 ---
 
@@ -202,8 +191,86 @@ No | Permintaan | Persediaan | Produksi
 - 📊 **Visualisasi 4 Tab Terintegrasi**: *Membership Functions*, *Implikasi 9 Aturan*, *Agregasi MAX & Defuzzifikasi Centroid*, serta *Rule Viewer Bar Chart*.
 - 💾 **Simpan Gambar Custom via File Explorer**:
   - Tombol simpan per tab (bebas pilih folder dan nama file).
-  - Tombol simpan **Semua Bagian (Pisah Tiap File `.png`)** langsung ke folder pilihan pengguna dengan memori posisi folder terakhir.
+  - Tombol simpan **Semua Bagian (Pisah Tiap File `.png`)** langsung ke folder pilihan pengguna dengan memori posisi folder terakhir (*directory persistence*).
 - 📋 **Tabel 10 Data Uji Interaktif**: Klik baris tabel untuk langsung mensimulasikan nilai ke grafik.
+
+**Cara menjalankan:**
+```bash
+python fuzzy_penyiraman_gui.py
+```
+
+---
+
+## 📌 Program 6 — `fuzzy_motor.py`
+### Sistem Pengendali Kecepatan Motor DC (GUI Interaktif & Pre-Computation)
+
+**Tujuan:** Mengatur sinyal kendali **PWM (Pulse Width Modulation)** untuk kecepatan motor DC secara adaptif dan presisi berdasarkan kondisi **Error Kecepatan** ($e = SP - PV$) dan laju perubahan error atau **Delta Error** ($\Delta e = \frac{de}{dt}$).
+
+**Variabel Masukan & Keluaran:**
+
+| Tipe | Variabel | Semesta | Kategori | Parameter MF (`trimf`) |
+|------|----------|---------|----------|------------------------|
+| **Input** | Error ($e$) | -100 s.d. 100 rpm | Negatif | `[-100, -100, 0]` |
+| | | | Nol | `[-50, 0, 50]` |
+| | | | Positif | `[0, 100, 100]` |
+| **Input** | Delta Error ($\Delta e$) | -20 s.d. 20 rpm/siklus | Negatif | `[-20, -20, 0]` |
+| | | | Nol | `[-10, 0, 10]` |
+| | | | Positif | `[0, 20, 20]` |
+| **Output** | Sinyal PWM Motor | 0 – 255 (8-bit) | Rendah | `[0, 0, 128]` |
+| | | | Sedang | `[64, 128, 192]` |
+| | | | Tinggi | `[128, 255, 255]` |
+
+**Basis Aturan (Rule Base) — 9 Rule IF-THEN:**
+
+| Rule | Kondisi Error ($e$) | Kondisi Delta Error ($\Delta e$) | Tindakan Sinyal PWM | Interpretasi Fisik |
+|:----:|:-------------------:|:-------------------------------:|:-------------------:|:-------------------|
+| **R1** | Negatif | Negatif | **Rendah** | Motor berputar melebihi setpoint dan makin cepat → kurangi daya PWM secara drastis |
+| **R2** | Negatif | Nol | **Rendah** | Motor terlalu cepat namun stabil → turunkan kecepatan |
+| **R3** | Negatif | Positif | **Sedang** | Motor terlalu cepat tapi mulai melambat → pertahankan daya sedang |
+| **R4** | Nol | Negatif | **Rendah** | Kecepatan pas pada setpoint tapi ada akselerasi naik → turunkan sedikit daya |
+| **R5** | Nol | Nol | **Sedang** | Kecepatan stabil tepat di setpoint → pertahankan kondisi steady-state |
+| **R6** | Nol | Positif | **Tinggi** | Kecepatan pas tapi mulai drop → suntikkan daya tambahan |
+| **R7** | Positif | Negatif | **Sedang** | Motor kurang cepat tapi laju mulai naik mendekati setpoint → daya sedang |
+| **R8** | Positif | Nol | **Tinggi** | Motor kurang cepat dan diam di tempat → naikkan daya ke level tinggi |
+| **R9** | Positif | Positif | **Tinggi** | Motor lambat dan makin tertinggal jauh → berikan daya maksimal |
+
+**Fitur Unggulan Program & GUI:**
+- 🖨️ **Pre-Run Benchmark Terminal (Otomatis)**:  
+  Sebelum jendela GUI ditampilkan ke layar, fungsi `jalankan_pengujian_terminal()` secara otomatis menghitung dan mencetak tabel evaluasi lengkap dari 10 skenario eksperimen `(Error, Delta Error)` ke konsol.
+- 🎛️ **Slider Taktil 3D Elegan**:  
+  Slider dirancang menggunakan style khusus `Motor.Horizontal.TScale` berbasis tema Clam dengan knob timbul bertekstur (*raised 3D*), aksen biru modern (`#378ADD`), border kontras, dan cursor tangan interaktif yang nyaman digeser.
+- 🔄 **Sinkronisasi Input Ganda**:  
+  Nilai dapat diatur lewat slider interaktif atau langsung diketik pada kotak isian *Entry* secara *real-time* dua arah.
+- 📊 **Visualisasi Grafis 1 Halaman Utuh (Multi-Plot Canvas)**:
+  - Grafik fungsi keanggotaan Error, Delta Error, dan PWM beserta garis vertikal penunjuk nilai input aktif.
+  - Subplot implikasi individual untuk 9 aturan lengkap dengan nilai *firing strength* ($\alpha$).
+  - Kurva Agregasi MAX dan garis defuzzifikasi Centroid titik berat.
+  - Grafik batang horizontal *Rule Viewer* untuk memantau kontribusi tiap aturan.
+- 💾 **Simpan Gambar Satu Halaman Penuh via File Explorer**:
+  - Tombol simpan ganda pada panel kontrol kiri dan di bawah canvas visualisasi.
+  - Terintegrasi langsung dengan `filedialog.asksaveasfilename` yang mengingat direktori folder terakhir yang dipilih (*directory persistence*).
+  - Grafik disimpan dalam resolusi tinggi (DPI 120) tanpa bagian yang terpotong.
+- ⚡ **Kartu Metrik & Status Real-time**: Menampilkan nilai PWM (0–255), persentase *Duty Cycle* (%), serta badge kategori kecepatan dinamis (Rendah / Sedang / Tinggi).
+
+**Tabel Hasil Pengujian 10 Skenario Percobaan:**
+
+| No | Error (rpm) | Delta Error (rpm/s) | Nilai PWM (0–255) | Duty Cycle (%) | Kategori Output |
+|:--:|:-----------:|:-------------------:|:-----------------:|:--------------:|:---------------:|
+| 1  | -80         | -15                 | 44.80             | 17.57 %        | Rendah          |
+| 2  | -40         | 0                   | 77.29             | 30.31 %        | Rendah          |
+| 3  | -30         | 10                  | 170.73            | 66.95 %        | Sedang          |
+| 4  | -5          | -5                  | 102.95            | 40.37 %        | Sedang          |
+| 5  | 0           | 0                   | 128.00            | 50.20 %        | Sedang          |
+| 6  | 10          | 5                   | 152.66            | 59.87 %        | Sedang          |
+| 7  | 30          | -10                 | 84.74             | 33.23 %        | Rendah          |
+| 8  | 50          | 10                  | 205.61            | 80.63 %        | Tinggi          |
+| 9  | 80          | 15                  | 210.55            | 82.57 %        | Tinggi          |
+| 10 | 100         | 20                  | 212.67            | 83.40 %        | Tinggi          |
+
+**Cara menjalankan:**
+```bash
+python fuzzy_motor.py
+```
 
 ---
 
@@ -233,7 +300,7 @@ Matploit berhasil
 
 ## 🧠 Konsep Dasar Logika Fuzzy
 
-Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
+Program dalam repositori ini mengimplementasikan **FIS Mamdani** melalui alur 8 tahap:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -243,21 +310,21 @@ Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
 ├───────┼─────────────────────────────────────────────────────────┤
 │   1   │ Definisi Fungsi Keanggotaan (trimf / segitiga)          │
 │   2   │ Fuzzifikasi Input → hitung μ(x) tiap kategori           │
-│   3   │ Evaluasi Rule dengan operator AND = MIN                  │
+│   3   │ Evaluasi Rule dengan operator AND = MIN                 │
 │   4   │ Hitung Firing Strength (α) tiap rule                    │
 │   5   │ Implikasi MIN → potong kurva output sesuai α            │
 │   6   │ Agregasi MAX → gabungkan semua kurva implikasi          │
 │   7   │ Defuzzifikasi Centroid → hasilkan nilai crisp output    │
-│   8   │ Visualisasi Rule Viewer                                  │
+│   8   │ Visualisasi Rule Viewer & Analisis Hasil                │
 └───────┴─────────────────────────────────────────────────────────┘
 ```
 
 **Metode yang digunakan:**
-- Fungsi Keanggotaan : **Triangular (trimf)**
-- Operator AND       : **Minimum (fmin)**
-- Implikasi         : **Minimum (fmin)**
-- Agregasi          : **Maximum (fmax)**
-- Defuzzifikasi     : **Centroid (Center of Gravity)**
+- Fungsi Keanggotaan : **Triangular (`trimf`)**
+- Operator AND       : **Minimum (`np.fmin`)**
+- Implikasi          : **Minimum (`np.fmin`)**
+- Agregasi           : **Maximum (`np.fmax`)**
+- Defuzzifikasi      : **Centroid / Center of Gravity (`fuzz.defuzz`)**
 
 ---
 
@@ -265,9 +332,10 @@ Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
 
 | Library | Versi | Fungsi |
 |---------|-------|--------|
-| `numpy` | ≥ 1.21 | Array numerik dan operasi matematika |
-| `scikit-fuzzy` | ≥ 0.4 | Fungsi keanggotaan, interpolasi, defuzzifikasi |
-| `matplotlib` | ≥ 3.4 | Visualisasi grafik dan plot |
+| `numpy` | ≥ 1.21 | Operasi array numerik multidimensi dan fungsi matematika |
+| `scikit-fuzzy` | ≥ 0.4 | Fungsi keanggotaan fuzzy, interpolasi, dan defuzzifikasi |
+| `matplotlib` | ≥ 3.4 | Rendering visualisasi grafik teknis dan multi-subplot canvas |
+| `tkinter` | Bawaan Python | Antarmuka grafis desktop interaktif (GUI) |
 
 ---
 
@@ -278,5 +346,4 @@ Program ini mengimplementasikan **FIS Mamdani** melalui alur berikut:
 > **Mata Kuliah :** MKPT 501 — Sistem Cerdas  
 > **Program :** PEI Semester 5  
 > **Modul :** M2 — Logika Fuzzy (FIS Mamdani)  
-> **Tanggal :** 07 Oktober 2026
-
+> **Tanggal :** 08 Oktober 2026
